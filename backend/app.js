@@ -39,9 +39,11 @@ app.post('/api/posts', (req, res, next) => {
     title: req.body.title,
     content: req.body.content
   });
-  post.save();
-  res.status(201).json({
-    message: 'All good !'
+  post.save().then(createdPost => {
+    res.status(201).json({
+      message: 'All good !',
+      postId: createdPost._id
+    });
   });
 });
 
@@ -51,6 +53,13 @@ app.get('/api/posts', (req, res, next) => {
       message: "Got 'em",
       posts: documents
     });
+  });
+});
+
+app.delete(`/api/posts/:id`, (req, res, next) => {
+  Post.deleteOne({ _id: req.params.id }).then(result => {
+    console.log(result);
+    res.status(200).json({ message: 'Postus Deletus! ' });
   });
 });
 
