@@ -1,6 +1,25 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+
+const Post = require('./models/post');
 
 const app = express();
+
+mongoose
+  .connect(
+    'mongodb+srv://SaiAngular:tTAvVYtdgzeRfwPW@baltic-react-mongodb-one-l0d3u.mongodb.net/MEAN-stack-one?retryWrites=true',
+    { useNewUrlParser: true }
+  )
+  .then(() => {
+    console.log('Connected to DB !');
+  })
+  .catch(() => {
+    console.log('No Bueno :(');
+  });
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -15,22 +34,23 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/api/posts', (req, res, next) => {
-  const posts = [
-    {
-      id: 'aa123',
-      title: 'First Server Side Post',
-      content: 'I am a server side post, look at me !'
-    },
-    {
-      id: 'adam',
-      title: 'Second Server Side Post',
-      content: ':( !'
-    }
-  ];
-  res.status(200).json({
-    message: "Got 'em",
-    posts: posts
+app.post('/api/posts', (req, res, next) => {
+  const post = new Post({
+    title: req.body.title,
+    content: req.body.content
+  });
+  post.save();
+  res.status(201).json({
+    message: 'All good !'
+  });
+});
+
+app.get('/api/posts', (req, res, next) => {
+  Post.find().then(documents => {
+    res.status(200).json({
+      message: "Got 'em",
+      posts: documents
+    });
   });
 });
 
