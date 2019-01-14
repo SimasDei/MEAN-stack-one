@@ -38,9 +38,12 @@ export class PostsService {
   }
 
   getPost(id: string) {
-    return this.http.get<{ _id: string; title: string; content: string }>(
-      `http://localhost:3000/api/posts/${id}`
-    );
+    return this.http.get<{
+      _id: string;
+      title: string;
+      content: string;
+      imagePath: string;
+    }>(`http://localhost:3000/api/posts/${id}`);
   }
 
   addPost(title: string, content: string, image: File) {
@@ -48,13 +51,13 @@ export class PostsService {
     postData.append('title', title);
     postData.append('content', content);
     postData.append('image', image, title);
-    const post: Post = { id: null, title: title, content: content };
     this.http
       .post<{ message: string; post: Post }>(
         'http://localhost:3000/api/posts',
         postData
       )
       .subscribe(response => {
+        // tslint:disable-next-line:no-shadowed-variable
         const post: Post = {
           id: response.post.id,
           title: title,
@@ -73,6 +76,7 @@ export class PostsService {
     let postData: Post | FormData;
     if (typeof image === 'object') {
       postData = new FormData();
+      postData.append('id', id);
       postData.append('title', title);
       postData.append('content', content);
       postData.append('image', image, title);
@@ -93,7 +97,7 @@ export class PostsService {
           id: id,
           title: title,
           content: content,
-          imagePath: response.imagePath
+          imagePath: ''
         };
         updatedPosts[oldPostIndex] = post;
         this.posts = updatedPosts;

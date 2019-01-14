@@ -62,26 +62,34 @@ router.post(
       res.status(201).json({
         message: 'All good !',
         post: {
-          id: createdPost._id,
-          title: createdPost.title,
-          content: createdPost.content,
-          imagePath: createdPost.imagePath
+          ...createdPost,
+          id: createdPost._id
         }
       });
     });
   }
 );
 
-router.put('/:id', (req, res, next) => {
-  const post = new Post({
-    _id: req.params.id,
-    title: req.body.title,
-    content: req.body.content
-  });
-  Post.updateOne({ _id: req.params.id }, post).then(result => {
-    res.status(200).json({ message: 'Posto El Updato Senior !' });
-  });
-});
+router.put(
+  '/:id',
+  multer({ storage: storage }).single('image'),
+  (req, res, next) => {
+    let imagePath = req.body.imagePath;
+    if (req.file) {
+      const url = req.protocol + '://' + req.get('host');
+      imagePath = url + '/images/' + req.file.filename;
+    }
+    const post = new Post({
+      _id: req.body.id,
+      title: req.body.title,
+      content: req.body.content,
+      imagePath: imagePath
+    });
+    Post.updateOne({ _id: req.params.id }, post).then(result => {
+      res.status(200).json({ message: 'Posto El Updato Senior !' });
+    });
+  }
+);
 
 router.delete(`/:id`, (req, res, next) => {
   Post.deleteOne({ _id: req.params.id }).then(result => {
