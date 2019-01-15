@@ -4,12 +4,13 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const postRoutes = require('./routes/posts');
+const userRoutes = require('./routes/user');
 
 const app = express();
 
 mongoose
   .connect(
-    'mongodb+srv://SaiAngular:tTAvVYtdgzeRfwPW@baltic-react-mongodb-one-l0d3u.mongodb.net/MEAN-stack-one?retryWrites=true',
+    'mongodb+srv://SaiAngular:tTAvVYtdgzeRfwPW@baltic-react-mongodb-one-l0d3u.mongodb.net/MEAN-stack-one',
     { useNewUrlParser: true }
   )
   .then(() => {
@@ -18,6 +19,7 @@ mongoose
   .catch(() => {
     console.log('No Bueno :(');
   });
+mongoose.set('useCreateIndex', true);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -37,5 +39,6 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/posts', postRoutes);
+app.use('/api/user', userRoutes);
 
 module.exports = app;
