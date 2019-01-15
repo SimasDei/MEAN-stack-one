@@ -22,7 +22,7 @@ router.post('/signup', (req, res, next) => {
       })
       .catch(err => {
         res.status(500).json({
-          error: err
+          message: 'Email already in use.'
         });
       });
   });
@@ -61,7 +61,7 @@ router.post('/login', (req, res, next) => {
     })
     .catch(err => {
       return res.status(401).json({
-        message: 'Authentication failed.'
+        message: 'Authentication failed. Bad info'
       });
     });
 });
