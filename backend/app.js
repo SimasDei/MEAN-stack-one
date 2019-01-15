@@ -10,7 +10,9 @@ const app = express();
 
 mongoose
   .connect(
-    'mongodb+srv://SaiAngular:tTAvVYtdgzeRfwPW@baltic-react-mongodb-one-l0d3u.mongodb.net/MEAN-stack-one',
+    `mongodb+srv://SaiAngular:${
+      process.env.MONGO_ATLAS_PW
+    }@baltic-react-mongodb-one-l0d3u.mongodb.net/MEAN-stack-one`,
     { useNewUrlParser: true }
   )
   .then(() => {
