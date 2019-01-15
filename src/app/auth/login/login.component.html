@@ -30,6 +30,8 @@
         >No.. seriously.. you need a password.</mat-error
       >
     </mat-form-field>
-    <button color="accent" mat-raised-button type="submit">LOGIN</button>
+    <button *ngIf="!isLoading" color="accent" mat-raised-button type="submit">
+      LOGIN
+    </button>
   </form>
 </mat-card>
